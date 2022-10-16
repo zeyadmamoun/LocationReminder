@@ -58,7 +58,7 @@ class RemindersActivityTest {
 
         Thread.sleep(4000)
 
-        onView(withId(R.id.map)).perform(click())
+        onView(withId(R.id.map)).perform(longClick())
         onView(withId(R.id.save_btn)).perform(click())
         onView(withId(R.id.saveReminder)).perform(click())
     }

@@ -18,10 +18,11 @@ import com.example.android.locationreminder.utils.setDisplayHomeAsUpEnabled
 import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.OnMapReadyCallback
 import com.google.android.gms.maps.SupportMapFragment
+import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.MapStyleOptions
 import com.google.android.gms.maps.model.MarkerOptions
-import com.google.android.gms.maps.model.PointOfInterest
 import org.koin.android.ext.android.inject
+import java.util.*
 
 const val REQUEST_LOCATION_PERMISSION = 1
 
@@ -31,7 +32,6 @@ class SelectLocationFragment : BaseFragment() , OnMapReadyCallback {
     override val _viewModel: SaveReminderViewModel by inject()
     private lateinit var binding: FragmentSelectLocationBinding
     private lateinit var map: GoogleMap
-    private var pointOfInterest: PointOfInterest? = null
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
@@ -53,16 +53,10 @@ class SelectLocationFragment : BaseFragment() , OnMapReadyCallback {
 
 //        TODO: call this function after the user confirms on the selected location
         binding.saveBtn.setOnClickListener {
-            pointOfInterest?.let {
-                _viewModel.selectedPOI.value = it
-                _viewModel.reminderSelectedLocationStr.value = it.name
-                _viewModel.latitude.value = it.latLng.latitude
-                _viewModel.longitude.value = it.latLng.longitude
 
-                _viewModel.navigationCommand.postValue(
-                    NavigationCommand.Back
-                )
-            }
+            _viewModel.navigationCommand.postValue(
+                NavigationCommand.Back
+            )
         }
 
         return binding.root
@@ -97,6 +91,7 @@ class SelectLocationFragment : BaseFragment() , OnMapReadyCallback {
         map = googleMap
         setMapStyle(map)
         onPoiSelected()
+        onLongClickListener()
         enableMyLocation()
     }
 
@@ -114,6 +109,32 @@ class SelectLocationFragment : BaseFragment() , OnMapReadyCallback {
         }
     }
 
+    private fun assignViewModelAttributes(locationStr: String, location: LatLng){
+        _viewModel.reminderSelectedLocationStr.value = locationStr
+        _viewModel.latitude.value = location.latitude
+        _viewModel.longitude.value = location.longitude
+    }
+
+    private fun onLongClickListener(){
+        map.setOnMapLongClickListener {
+            map.clear()
+            val snippet = String.format(
+                Locale.getDefault(),
+                "Lat: %1$.5f, Long: %2$.5f",
+                it.latitude,
+                it.longitude
+            )
+            val marker = map.addMarker(
+                MarkerOptions()
+                    .position(it)
+                    .title(getString(R.string.dropped_pin))
+                    .snippet(snippet)
+            )
+            assignViewModelAttributes(marker?.title!!,it)
+            binding.saveBtn.visibility = View.VISIBLE
+        }
+    }
+
     private fun onPoiSelected(){
         map.setOnPoiClickListener {
             map.clear()
@@ -123,7 +144,8 @@ class SelectLocationFragment : BaseFragment() , OnMapReadyCallback {
                     .title(it.name)
             )
             poiMarker?.showInfoWindow()
-            pointOfInterest = it
+            assignViewModelAttributes(it.name,it.latLng)
+            _viewModel.selectedPOI.value = it
             binding.saveBtn.visibility = View.VISIBLE
         }
     }
