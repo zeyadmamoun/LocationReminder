@@ -14,6 +14,7 @@ import org.junit.Assert.assertNotNull
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
+import java.util.*
 
 @ExperimentalCoroutinesApi
 @SmallTest
@@ -50,6 +51,19 @@ class RemindersDaoTest {
         assertEquals(reminder.latitude,savedReminder.latitude)
         assertEquals(reminder.longitude,savedReminder.longitude)
         assertEquals(reminder.location,savedReminder.location)
+    }
+
+    // here testing if there is no reminder with specific id
+    @Test
+    fun getReminderByIdFail() = runTest{
+        //Given Reminder and insert it into the database
+        val reminder = ReminderDTO("title2","description2","location2",30.0,40.0)
+        val reminderId = UUID.randomUUID().toString()
+        //When - Get the reminder by its id
+        database.reminderDao().saveReminder(reminder)
+        val result = database.reminderDao().getReminderById(reminderId)
+        //Then check on returned data is null
+        assertEquals(null,result)
     }
 
 }
