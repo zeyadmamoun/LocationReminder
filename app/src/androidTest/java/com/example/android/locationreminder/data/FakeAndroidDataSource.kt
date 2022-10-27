@@ -3,10 +3,11 @@ package com.example.android.locationreminder.data
 import com.example.android.locationreminder.locationreminders.data.ReminderDataSource
 import com.example.android.locationreminder.locationreminders.data.dto.ReminderDTO
 import com.example.android.locationreminder.locationreminders.data.dto.Result
+import javax.sql.DataSource
 
-class FakeAndroidDataSource: ReminderDataSource{
+class FakeAndroidDataSource: ReminderDataSource {
 
-    val reminders = mutableListOf<ReminderDTO>()
+    private val reminders = mutableListOf<ReminderDTO>()
     private var shouldReturnError = false
 
     override suspend fun getReminders(): Result<List<ReminderDTO>> {
@@ -26,10 +27,10 @@ class FakeAndroidDataSource: ReminderDataSource{
     }
 
     override suspend fun deleteAllReminders() {
-        TODO("Not yet implemented")
+        reminders.clear()
     }
 
-    fun setErrorState(value: Boolean){
+    override fun setErrorState(value: Boolean) {
         shouldReturnError = value
     }
 }

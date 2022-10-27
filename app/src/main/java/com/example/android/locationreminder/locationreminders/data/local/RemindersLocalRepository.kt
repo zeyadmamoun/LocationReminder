@@ -65,4 +65,8 @@ class RemindersLocalRepository(
             remindersDao.deleteAllReminders()
         }
     }
+
+    override fun setErrorState(value: Boolean) {
+        TODO("Not yet implemented")
+    }
 }

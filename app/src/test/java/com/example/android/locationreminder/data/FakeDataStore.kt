@@ -32,7 +32,7 @@ class FakeDataStore : ReminderDataSource{
         TODO("Not yet implemented")
     }
 
-    fun setErrorState(value: Boolean){
+    override fun setErrorState(value: Boolean){
         shouldReturnError = value
     }
 
