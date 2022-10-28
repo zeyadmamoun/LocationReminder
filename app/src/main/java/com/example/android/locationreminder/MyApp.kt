@@ -1,7 +1,6 @@
 package com.example.android.locationreminder
 
 import android.app.Application
-import com.example.android.locationreminder.base.BaseViewModel
 import com.example.android.locationreminder.locationreminders.data.ReminderDataSource
 import com.example.android.locationreminder.locationreminders.data.local.LocalDB
 import com.example.android.locationreminder.locationreminders.data.local.RemindersLocalRepository
@@ -25,7 +24,7 @@ class MyApp : Application() {
             viewModel {
                 RemindersListViewModel(
                     get(),
-                    get() as RemindersLocalRepository
+                    get() as ReminderDataSource
                 )
             }
             //Declare singleton definitions to be later injected using by inject()
@@ -33,10 +32,10 @@ class MyApp : Application() {
                 //This view model is declared singleton to be used across multiple fragments
                 SaveReminderViewModel(
                     get(),
-                    get() as RemindersLocalRepository
+                    get() as ReminderDataSource
                 )
             }
-            single { RemindersLocalRepository(get())}
+            single { RemindersLocalRepository(get()) as ReminderDataSource}
             single { LocalDB.createRemindersDao(this@MyApp) }
         }
 

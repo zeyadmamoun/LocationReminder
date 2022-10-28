@@ -85,4 +85,14 @@ class RemindersListViewModelTest {
         assertEquals(true,viewModel.showNoData.value)
     }
 
+    @Test
+    fun validatingSnackBarText_WhenErrorHappens(){
+        //Given Error happens
+        dataSource.setErrorState(true)
+        //when loadReminders called from RemindersListViewModel
+        viewModel.loadReminders()
+        //Then showSnackBar.value should Equal "Error"
+        assertEquals("Error",viewModel.showSnackBar.value)
+    }
+
 }
