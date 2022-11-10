@@ -8,6 +8,7 @@ import com.example.android.locationreminder.data.FakeDataStore
 import com.example.android.locationreminder.locationreminders.reminderslist.ReminderDataItem
 import com.example.android.locationreminder.locationreminders.savereminder.SaveReminderViewModel
 import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.test.runTest
 import org.junit.Assert.assertEquals
 import org.junit.Before
 import org.junit.Rule
@@ -51,6 +52,15 @@ class SaveReminderViewModelTest {
         viewModel.saveReminder(reminder)
 
         assertEquals(1,dataSource.reminders.size)
+    }
+
+    @Test
+    fun testingShowToast_WhenAddingNewReminder(){
+        viewModel.onClear()
+        val reminder = ReminderDataItem("title2","description2","location2",30.0,40.0)
+        viewModel.saveReminder(reminder)
+
+        assertEquals("Reminder Saved !",viewModel.showToast.value)
     }
 
 }

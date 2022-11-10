@@ -104,7 +104,7 @@ class SaveReminderFragment : BaseFragment() {
                 addOnSuccessListener {
                     Toast.makeText(reminderActivity,"$title geofence is created",Toast.LENGTH_SHORT).show()
                     //  2) save the reminder to the local db
-                    val reminder = ReminderDataItem(title,description,location,latitude,longitude)
+                    val reminder = ReminderDataItem(title,description,location,latitude,longitude,geofenceId)
                     _viewModel.validateAndSaveReminder(reminder)
 
                     _viewModel.navigationCommand.value = NavigationCommand.Back
