@@ -26,6 +26,7 @@ import com.google.android.gms.location.Geofence
 import com.google.android.gms.location.GeofencingClient
 import com.google.android.gms.location.LocationServices
 import org.koin.android.ext.android.inject
+import java.util.*
 
 class SaveReminderFragment : BaseFragment() {
     //Get the view model this time as a single to be shared with the another fragment
@@ -77,13 +78,14 @@ class SaveReminderFragment : BaseFragment() {
             val location = _viewModel.reminderSelectedLocationStr.value
             val latitude = _viewModel.latitude.value
             val longitude = _viewModel.longitude.value
+            val geofenceId = UUID.randomUUID().toString()
 
 
 
 //            TODO: use the user entered reminder details to:
 //             1) add a geofencing request
             val geofenceList = mutableListOf<Geofence>()
-            geofenceList.add(geofenceHandler.createGeofence(title!!,latitude!!,longitude!!))
+            geofenceList.add(geofenceHandler.createGeofence(geofenceId,latitude!!,longitude!!))
             val geofencingRequest = geofenceHandler.getGeofencingRequest(geofenceList)
 
             if (ActivityCompat.checkSelfPermission(

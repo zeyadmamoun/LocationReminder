@@ -5,11 +5,11 @@ import com.google.android.gms.location.GeofencingRequest
 
 class GeofenceHandler {
 
-    fun createGeofence(title: String,latitude: Double,longitude: Double): Geofence {
+    fun createGeofence(id: String,latitude: Double,longitude: Double): Geofence {
         return Geofence.Builder()
             // Set the request ID of the geofence. This is a string to identify this
             // geofence.
-            .setRequestId(title)
+            .setRequestId(id)
 
             // Set the circular region of this geofence.
             .setCircularRegion(
