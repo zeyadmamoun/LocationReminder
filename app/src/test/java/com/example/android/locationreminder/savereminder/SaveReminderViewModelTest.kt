@@ -8,7 +8,6 @@ import com.example.android.locationreminder.data.FakeDataStore
 import com.example.android.locationreminder.locationreminders.reminderslist.ReminderDataItem
 import com.example.android.locationreminder.locationreminders.savereminder.SaveReminderViewModel
 import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.test.runTest
 import org.junit.Assert.assertEquals
 import org.junit.Before
 import org.junit.Rule
