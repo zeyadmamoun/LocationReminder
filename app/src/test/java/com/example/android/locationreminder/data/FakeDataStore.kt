@@ -3,21 +3,17 @@ package com.example.android.locationreminder.data
 import com.example.android.locationreminder.locationreminders.data.ReminderDataSource
 import com.example.android.locationreminder.locationreminders.data.dto.ReminderDTO
 import com.example.android.locationreminder.locationreminders.data.dto.Result
-import com.example.android.locationreminder.locationreminders.reminderslist.ReminderDataItem
-import kotlinx.coroutines.CoroutineDispatcher
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.withContext
 
-class FakeDataStore : ReminderDataSource{
+class FakeDataStore : ReminderDataSource {
 
     var reminders = mutableListOf<ReminderDTO>()
     private var shouldReturnError = false
 
     override suspend fun getReminders(): Result<List<ReminderDTO>> {
-        return if (!shouldReturnError){
+        return if (!shouldReturnError) {
             Result.Success(reminders)
-        }else{
-            Result.Error("Error")
+        } else {
+            Result.Error("Reminders cannot be retrieved")
         }
     }
 
@@ -26,14 +22,27 @@ class FakeDataStore : ReminderDataSource{
     }
 
     override suspend fun getReminder(id: String): Result<ReminderDTO> {
-        TODO("Not yet implemented")
+        var reminder = ReminderDTO("", "", "", 0.0, 0.0)
+        var isReminderFound = false
+
+        reminders.forEach { item ->
+            if (item.id == id) {
+                reminder = item
+                isReminderFound = true
+            }
+        }
+        return if (isReminderFound) {
+            Result.Success(reminder)
+        } else {
+            Result.Error("Reminders cannot be retrieved")
+        }
     }
 
     override suspend fun deleteAllReminders() {
-        TODO("Not yet implemented")
+        reminders.clear()
     }
 
-    override fun setErrorState(value: Boolean){
+    override fun setErrorState(value: Boolean) {
         shouldReturnError = value
     }
 

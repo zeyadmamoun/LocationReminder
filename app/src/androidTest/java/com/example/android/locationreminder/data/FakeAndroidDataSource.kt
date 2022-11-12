@@ -14,7 +14,7 @@ class FakeAndroidDataSource: ReminderDataSource {
         return if (!shouldReturnError){
             Result.Success(reminders)
         }else{
-            Result.Error("Error")
+            Result.Error("Reminders cannot be retrieved")
         }
     }
 
@@ -23,7 +23,20 @@ class FakeAndroidDataSource: ReminderDataSource {
     }
 
     override suspend fun getReminder(id: String): Result<ReminderDTO> {
-        TODO("Not yet implemented")
+        var reminder = ReminderDTO("", "", "", 0.0, 0.0)
+        var isReminderFound = false
+
+        reminders.forEach { item ->
+            if (item.id == id) {
+                reminder = item
+                isReminderFound = true
+            }
+        }
+        return if (isReminderFound) {
+            Result.Success(reminder)
+        } else {
+            Result.Error("Reminders cannot be retrieved")
+        }
     }
 
     override suspend fun deleteAllReminders() {
