@@ -72,7 +72,7 @@ class RemindersListViewModelTest {
         dataSource.setErrorState(true)
         viewModel.loadReminders()
 
-        assertEquals("Error",viewModel.showSnackBar.value)
+        assertEquals("Reminders cannot be retrieved",viewModel.showSnackBar.value)
     }
 
     @Test
@@ -92,7 +92,7 @@ class RemindersListViewModelTest {
         //when loadReminders called from RemindersListViewModel
         viewModel.loadReminders()
         //Then showSnackBar.value should Equal "Error"
-        assertEquals("Error",viewModel.showSnackBar.value)
+        assertEquals("Reminders cannot be retrieved",viewModel.showSnackBar.value)
     }
 
 }
