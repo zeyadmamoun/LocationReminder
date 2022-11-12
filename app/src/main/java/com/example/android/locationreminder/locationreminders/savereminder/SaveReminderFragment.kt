@@ -34,22 +34,19 @@ class SaveReminderFragment : BaseFragment() {
     private lateinit var binding: FragmentSaveReminderBinding
     private lateinit var geofencingClient: GeofencingClient
     private lateinit var geofenceHandler: GeofenceHandler
-    private lateinit var reminderActivity: RemindersActivity
+//    private lateinit var reminderActivity: RemindersActivity
 
     private val geofencePendingIntent: PendingIntent by lazy {
         val intent = Intent(requireActivity(), GeofenceBroadcastReceiver::class.java)
         PendingIntent.getBroadcast(requireContext(), 0, intent, PendingIntent.FLAG_UPDATE_CURRENT)
     }
 
-    override fun onAttach(context: Context) {
-        super.onAttach(context)
-        reminderActivity = activity as RemindersActivity
-    }
-
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
+
+//        reminderActivity = activity as RemindersActivity
 
         geofencingClient = LocationServices.getGeofencingClient(requireContext())
         geofenceHandler = GeofenceHandler()
@@ -72,7 +69,7 @@ class SaveReminderFragment : BaseFragment() {
                 NavigationCommand.To(SaveReminderFragmentDirections.actionSaveReminderFragmentToSelectLocationFragment())
         }
 
-        binding.saveReminder.setOnClickListener {
+        binding.addReminderBtn.setOnClickListener {
             val title = _viewModel.reminderTitle.value
             val description = _viewModel.reminderDescription.value
             val location = _viewModel.reminderSelectedLocationStr.value
@@ -102,7 +99,7 @@ class SaveReminderFragment : BaseFragment() {
 
             geofencingClient.addGeofences(geofencingRequest,geofencePendingIntent)?.run {
                 addOnSuccessListener {
-                    Toast.makeText(reminderActivity,"$title geofence is created",Toast.LENGTH_SHORT).show()
+                    Toast.makeText(requireActivity(),"$title geofence is created",Toast.LENGTH_SHORT).show()
                     //  2) save the reminder to the local db
                     val reminder = ReminderDataItem(title,description,location,latitude,longitude,geofenceId)
                     _viewModel.validateAndSaveReminder(reminder)
@@ -111,7 +108,7 @@ class SaveReminderFragment : BaseFragment() {
                 }
                 addOnFailureListener {
                     // Failed to add geofence
-                    Toast.makeText(reminderActivity,"$title geofence is failed",Toast.LENGTH_SHORT).show()
+                    Toast.makeText(requireActivity(),"$title geofence is failed",Toast.LENGTH_SHORT).show()
                 }
             }
         }

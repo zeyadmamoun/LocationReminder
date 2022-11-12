@@ -1,6 +1,5 @@
 package com.example.android.locationreminder
 
-import android.icu.number.NumberFormatter
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import androidx.test.core.app.ActivityScenario
 import androidx.test.espresso.Espresso.onView
@@ -60,7 +59,7 @@ class RemindersActivityTest {
 
         onView(withId(R.id.map)).perform(longClick())
         onView(withId(R.id.save_btn)).perform(click())
-        onView(withId(R.id.saveReminder)).perform(click())
+        onView(withId(R.id.addReminderBtn)).perform(click())
     }
 
 }
