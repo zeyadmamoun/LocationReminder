@@ -83,7 +83,7 @@ class ReminderListFragmentTest {
         dataSource.setErrorState(true)
         launchFragmentInContainer<ReminderListFragment>(Bundle(),R.style.Theme_LocationReminder)
 
-        onView(withId(R.id.noDataTextView))
+        onView(withText("Reminders cannot be retrieved"))
             .check(matches(isDisplayed()))
     }
 }
