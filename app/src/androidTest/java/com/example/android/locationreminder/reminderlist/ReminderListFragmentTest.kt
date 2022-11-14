@@ -8,7 +8,6 @@ import androidx.test.core.app.ApplicationProvider
 import androidx.test.espresso.Espresso.onView
 import androidx.test.espresso.action.ViewActions.click
 import androidx.test.espresso.assertion.ViewAssertions.matches
-import androidx.test.espresso.matcher.RootMatchers
 import androidx.test.espresso.matcher.ViewMatchers.*
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import androidx.test.filters.MediumTest
@@ -19,10 +18,7 @@ import com.example.android.locationreminder.locationreminders.reminderslist.Remi
 import com.example.android.locationreminder.locationreminders.reminderslist.ReminderListFragment
 import com.example.android.locationreminder.locationreminders.reminderslist.ReminderListFragmentDirections
 import com.example.android.locationreminder.locationreminders.reminderslist.RemindersListViewModel
-import com.example.android.locationreminder.locationreminders.savereminder.SaveReminderViewModel
-import com.google.android.material.internal.ContextUtils
 import kotlinx.coroutines.ExperimentalCoroutinesApi
-import org.hamcrest.CoreMatchers
 import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
