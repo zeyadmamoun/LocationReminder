@@ -72,24 +72,4 @@ class RemindersActivityTest {
         onView(withId(R.id.saveReminder)).perform(click())
     }
 
-    @Test
-    fun testingToast_whenNewReminderSaved(){
-        val activityScenario = ActivityScenario.launch(RemindersActivity::class.java)
-        dataBindingIdlingResource.monitorActivity(activityScenario)
-
-        val reminder = ReminderDataItem("Testing Reminder","Testing Desc","location"
-            ,20.0,40.0, UUID.randomUUID().toString())
-
-        onView(withId(R.id.addReminderFAB)).perform(click())
-        onView(withId(R.id.reminderTitle)).perform(replaceText("Testing Reminder"))
-        onView(withId(R.id.reminderDescription)).perform(replaceText("Testing Desc"))
-
-        saveReminderViewModel.validateAndSaveReminder(reminder)
-        activityScenario.onActivity{
-            onView(ViewMatchers.withText(R.string.reminder_saved))
-                .inRoot(RootMatchers.withDecorView(CoreMatchers.not(it.window.decorView)))
-                .check(ViewAssertions.matches(ViewMatchers.isDisplayed()));
-        }
-    }
-
 }

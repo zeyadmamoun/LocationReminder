@@ -3,10 +3,15 @@ package com.example.android.locationreminder.savereminder
 import android.os.Bundle
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import androidx.fragment.app.testing.launchFragmentInContainer
+import androidx.navigation.NavController
+import androidx.navigation.Navigation
 import androidx.test.core.app.ApplicationProvider
 import androidx.test.espresso.Espresso.onView
 import androidx.test.espresso.action.ViewActions.click
 import androidx.test.espresso.action.ViewActions.replaceText
+import androidx.test.espresso.assertion.ViewAssertions
+import androidx.test.espresso.matcher.RootMatchers
+import androidx.test.espresso.matcher.ViewMatchers
 import androidx.test.espresso.matcher.ViewMatchers.withId
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import androidx.test.filters.MediumTest
@@ -17,14 +22,14 @@ import com.example.android.locationreminder.locationreminders.data.ReminderDataS
 import com.example.android.locationreminder.locationreminders.reminderslist.ReminderDataItem
 import com.example.android.locationreminder.locationreminders.savereminder.SaveReminderFragment
 import com.example.android.locationreminder.locationreminders.savereminder.SaveReminderViewModel
-import com.google.android.gms.maps.model.LatLng
-import com.google.android.gms.maps.model.PointOfInterest
 import kotlinx.coroutines.ExperimentalCoroutinesApi
+import org.hamcrest.CoreMatchers
 import org.junit.Assert.assertEquals
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
+import org.mockito.Mockito.mock
 import java.util.*
 
 
@@ -67,20 +72,30 @@ class SaveReminderFragmentTest {
         assertEquals("Reminder Saved !", saveReminderViewModel.showToast.getOrAwaitValue())
     }
 
-    // the same test but there is error happening when i click on the saveReminder button as you mentioned and i told you there is error in espresso i will mention it.
+    // the same test but without using saveReminderViewModel and using ViewAssertions.
+    // there is error happening on API lvl 30 with finding or matching toast --> https://github.com/android/android-test/issues/803
     @Test
     fun testingToastWithButton_whenNewReminderSaved() {
         val reminder = ReminderDataItem("Testing Reminder","Testing Desc","location",20.0,40.0,UUID.randomUUID().toString())
         val scenario = launchFragmentInContainer<SaveReminderFragment>(Bundle(),R.style.Theme_LocationReminder)
-        saveReminderViewModel.longitude.value = 20.0
-        saveReminderViewModel.latitude.value = 40.0
-        saveReminderViewModel.selectedPOI.value = PointOfInterest(LatLng(40.0,20.0),"2","Location")
-        saveReminderViewModel.reminderSelectedLocationStr.value = "Location"
+        scenario.onFragment{
+            it._viewModel.latitude.value = 20.0
+            it._viewModel.longitude.value = 40.0
+        }
 
-        onView(withId(R.id.reminderTitle)).perform(replaceText("Testing Reminder"))
-        onView(withId(R.id.reminderDescription)).perform(replaceText("Testing Desc"))
+        val navController = mock(NavController::class.java)
+        scenario.onFragment{
+            Navigation.setViewNavController(it.view!!,navController)
+        }
+
+        onView(withId(R.id.reminderTitle)).perform(replaceText(reminder.title))
+        onView(withId(R.id.reminderDescription)).perform(replaceText(reminder.description))
         onView(withId(R.id.saveReminder)).perform(click())
 
-        assertEquals("Reminder Saved !", saveReminderViewModel.showToast.getOrAwaitValue())
+        scenario.onFragment {
+            onView(ViewMatchers.withText(R.string.reminder_saved))
+                .inRoot(RootMatchers.withDecorView(CoreMatchers.not(it.requireActivity().window.decorView)))
+                .check(ViewAssertions.matches(ViewMatchers.isDisplayed()))
+        }
     }
 }
