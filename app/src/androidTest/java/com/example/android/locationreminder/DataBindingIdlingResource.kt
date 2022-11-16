@@ -8,6 +8,7 @@ import androidx.fragment.app.FragmentActivity
 import androidx.fragment.app.testing.FragmentScenario
 import androidx.test.core.app.ActivityScenario
 import androidx.test.espresso.IdlingResource
+import com.example.android.locationreminder.locationreminders.savereminder.SaveReminderFragment
 import java.util.UUID
 
 class DataBindingIdlingResource : IdlingResource{
@@ -78,7 +79,7 @@ fun DataBindingIdlingResource.monitorActivity(
 /**
  * Sets the fragment from a [FragmentScenario] to be used from [DataBindingIdlingResource].
  */
-fun DataBindingIdlingResource.monitorFragment(fragmentScenario: FragmentScenario<Fragment>) {
+fun DataBindingIdlingResource.monitorFragment(fragmentScenario: FragmentScenario<SaveReminderFragment>) {
     fragmentScenario.onFragment {
         this.activity = it.requireActivity()
     }

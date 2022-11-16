@@ -67,7 +67,7 @@ class SaveReminderFragmentTest {
         assertEquals("Reminder Saved !", saveReminderViewModel.showToast.getOrAwaitValue())
     }
 
-    // the same test but there is error happening when i click on the saveReminder button.
+    // the same test but there is error happening when i click on the saveReminder button as you mentioned and i told you there is error in espresso i will mention it.
     @Test
     fun testingToastWithButton_whenNewReminderSaved() {
         val reminder = ReminderDataItem("Testing Reminder","Testing Desc","location",20.0,40.0,UUID.randomUUID().toString())
@@ -75,12 +75,10 @@ class SaveReminderFragmentTest {
         saveReminderViewModel.longitude.value = 20.0
         saveReminderViewModel.latitude.value = 40.0
         saveReminderViewModel.selectedPOI.value = PointOfInterest(LatLng(40.0,20.0),"2","Location")
-        saveReminderViewModel.reminderTitle.value = "Testing Reminder"
-        saveReminderViewModel.reminderDescription.value = "Testing Desc"
         saveReminderViewModel.reminderSelectedLocationStr.value = "Location"
 
-        onView(withId(R.id.reminderTitle)).perform(replaceText(reminder.title))
-        onView(withId(R.id.reminderDescription)).perform(replaceText(reminder.description))
+        onView(withId(R.id.reminderTitle)).perform(replaceText("Testing Reminder"))
+        onView(withId(R.id.reminderDescription)).perform(replaceText("Testing Desc"))
         onView(withId(R.id.saveReminder)).perform(click())
 
         assertEquals("Reminder Saved !", saveReminderViewModel.showToast.getOrAwaitValue())
