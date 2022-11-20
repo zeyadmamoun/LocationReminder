@@ -77,8 +77,6 @@ class SaveReminderFragment : BaseFragment() {
             val longitude = _viewModel.longitude.value
             val geofenceId = UUID.randomUUID().toString()
 
-
-
 //            TODO: use the user entered reminder details to:
 //             1) add a geofencing request
             val geofenceList = mutableListOf<Geofence>()
