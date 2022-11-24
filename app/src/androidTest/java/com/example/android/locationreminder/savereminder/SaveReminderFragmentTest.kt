@@ -76,11 +76,13 @@ class SaveReminderFragmentTest {
     // there is error happening on API lvl 30 with finding or matching toast --> https://github.com/android/android-test/issues/803
     @Test
     fun testingToastWithButton_whenNewReminderSaved() {
-        val reminder = ReminderDataItem("Testing Reminder","Testing Desc","location",20.0,40.0,UUID.randomUUID().toString())
         val scenario = launchFragmentInContainer<SaveReminderFragment>(Bundle(),R.style.Theme_LocationReminder)
         scenario.onFragment{
             it._viewModel.latitude.value = 20.0
             it._viewModel.longitude.value = 40.0
+            it._viewModel.reminderSelectedLocationStr.value = "new location"
+            it._viewModel.reminderTitle.value = "Testing Reminder"
+            it._viewModel.reminderDescription.value = "Testing Desc"
         }
 
         val navController = mock(NavController::class.java)
@@ -88,12 +90,12 @@ class SaveReminderFragmentTest {
             Navigation.setViewNavController(it.view!!,navController)
         }
 
-        onView(withId(R.id.reminderTitle)).perform(replaceText(reminder.title))
-        onView(withId(R.id.reminderDescription)).perform(replaceText(reminder.description))
+        onView(withId(R.id.reminderTitle)).perform(replaceText("Testing Reminder"))
+        onView(withId(R.id.reminderDescription)).perform(replaceText("Testing Desc"))
         onView(withId(R.id.saveReminder)).perform(click())
 
         scenario.onFragment {
-            onView(ViewMatchers.withText(R.string.reminder_saved))
+            onView(ViewMatchers.withText("${it._viewModel.reminderTitle.value} geofence is created"))
                 .inRoot(RootMatchers.withDecorView(CoreMatchers.not(it.requireActivity().window.decorView)))
                 .check(ViewAssertions.matches(ViewMatchers.isDisplayed()))
         }
