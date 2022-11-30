@@ -20,6 +20,7 @@ import com.example.android.locationreminder.data.FakeAndroidDataSource
 import com.example.android.locationreminder.getOrAwaitValue
 import com.example.android.locationreminder.locationreminders.data.ReminderDataSource
 import com.example.android.locationreminder.locationreminders.reminderslist.ReminderDataItem
+import com.example.android.locationreminder.locationreminders.reminderslist.RemindersListViewModel
 import com.example.android.locationreminder.locationreminders.savereminder.SaveReminderFragment
 import com.example.android.locationreminder.locationreminders.savereminder.SaveReminderViewModel
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -29,6 +30,10 @@ import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
+import org.koin.androidx.viewmodel.dsl.viewModel
+import org.koin.core.context.startKoin
+import org.koin.core.context.stopKoin
+import org.koin.dsl.module
 import org.mockito.Mockito.mock
 import java.util.*
 
@@ -48,16 +53,23 @@ class SaveReminderFragmentTest {
     fun setup() {
         dataSource = FakeAndroidDataSource()
         saveReminderViewModel = SaveReminderViewModel(ApplicationProvider.getApplicationContext(),dataSource)
+        stopKoin()
+
+        val myModule = module {
+            single {
+                saveReminderViewModel
+            }
+        }
+
+        // new koin module
+        startKoin {
+            modules(listOf(myModule))
+        }
     }
 
 //    @Before
-//    fun registerIdlingResource() {
-//        IdlingRegistry.getInstance().register(dataBindingIdlingResource)
-//    }
+//    fun dependenciesSetup(){
 //
-//    @After
-//    fun unregisterIdlingResource() {
-//        IdlingRegistry.getInstance().unregister(dataBindingIdlingResource)
 //    }
 
     @Test
@@ -77,13 +89,12 @@ class SaveReminderFragmentTest {
     @Test
     fun testingToastWithButton_whenNewReminderSaved() {
         val scenario = launchFragmentInContainer<SaveReminderFragment>(Bundle(),R.style.Theme_LocationReminder)
-        scenario.onFragment{
-            it._viewModel.latitude.value = 20.0
-            it._viewModel.longitude.value = 40.0
-            it._viewModel.reminderSelectedLocationStr.value = "new location"
-            it._viewModel.reminderTitle.value = "Testing Reminder"
-            it._viewModel.reminderDescription.value = "Testing Desc"
-        }
+
+        saveReminderViewModel.latitude.value = 20.0
+        saveReminderViewModel.longitude.value = 40.0
+        saveReminderViewModel.reminderSelectedLocationStr.value = "new location"
+        saveReminderViewModel.reminderTitle.value = "Testing Reminder"
+        saveReminderViewModel.reminderDescription.value = "Testing Desc"
 
         val navController = mock(NavController::class.java)
         scenario.onFragment{
@@ -95,7 +106,7 @@ class SaveReminderFragmentTest {
         onView(withId(R.id.saveReminder)).perform(click())
 
         scenario.onFragment {
-            onView(ViewMatchers.withText("${it._viewModel.reminderTitle.value} geofence is created"))
+            onView(ViewMatchers.withText("Reminder Saved !"))
                 .inRoot(RootMatchers.withDecorView(CoreMatchers.not(it.requireActivity().window.decorView)))
                 .check(ViewAssertions.matches(ViewMatchers.isDisplayed()))
         }
